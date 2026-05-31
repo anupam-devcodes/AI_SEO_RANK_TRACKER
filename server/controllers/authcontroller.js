@@ -116,8 +116,11 @@ export const getUser = async (req, res) => {
     }
 
     res.status(200).json({
-      success: true,
-      user,
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      plan: user.plan,
+      analysisCount: user.analysisCount,
     });
   } catch (error) {
     res.status(500).json({

@@ -28,13 +28,12 @@ export default function Login({ state }: { state: string }) {
             result = await register(name, email, password);
         }
 
-        if (!result.success) {
-            const redirect = searchParams.get("redirect") || "/dashboard";
-            navigate(redirect);
-        }
-        else {
-            toast.error(result.message || "An error occurred. Please try again.");
-        }
+        if (result.success) {
+  const redirect = searchParams.get("redirect") || "/dashboard";
+  navigate(redirect);
+} else {
+  toast.error(result.message || "An error occurred. Please try again.");
+}
 
         setloading(false);
     };

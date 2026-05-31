@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
 interface User {
-    id: number;
+    id: string;
     name: string;
     email: string;
     plan: string;
