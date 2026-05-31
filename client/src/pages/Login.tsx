@@ -1,16 +1,42 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Loader2, ChartNoAxesColumnIcon, User2Icon } from "lucide-react";
+import { useApp } from "../context/AppContext";
+import { toast } from "react-hot-toast/headless";
+import { useSearchParams } from "react-router-dom";
+import Navbar from "../components/Navbar";
+
 
 export default function Login({ state }: { state: string }) {
     const [isLoginState, setIsLoginState] = useState(state === "login");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading] = useState(false);
+    const [loading, setloading] = useState(false);
+    const { login, register } = useApp();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
+        setloading(true);
+
+        let result;
+        if (isLoginState) {
+            result = await login(email, password);
+        } else {
+            result = await register(name, email, password);
+        }
+
+        if (!result.success) {
+            const redirect = searchParams.get("redirect") || "/dashboard";
+            navigate(redirect);
+        }
+        else {
+            toast.error(result.message || "An error occurred. Please try again.");
+        }
+
+        setloading(false);
     };
 
     return (
