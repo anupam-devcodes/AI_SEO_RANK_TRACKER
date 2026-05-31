@@ -1,126 +1,387 @@
-# 🚀 AI SEO Rank Tracker
+# RankPilot — AI-Powered SEO Analysis & Rank Tracking Platform
 
-An AI-powered SEO Rank Tracking platform built using the MERN Stack that helps users monitor keyword rankings, analyze SEO performance, and track website visibility in search engines.
+RankPilot is a backend-first SEO analytics platform designed to help users analyze websites, monitor keyword performance and generate actionable SEO insights through a secure, API-driven workflow.
 
----
-
-## 📌 Project Overview
-
-AI SEO Rank Tracker is a full-stack web application designed to simplify SEO monitoring and analytics.  
-The platform allows users to track keyword rankings, manage SEO campaigns, and visualize ranking performance through an interactive dashboard.
-
-This project is currently under development.
+The repository includes a web client that consumes the platform APIs and supports end-to-end feature validation. The primary engineering focus of this implementation is the backend and data layer: authentication, API development, MongoDB modelling, service integrations and deployment.
 
 ---
 
-## ✨ Features
+## Project Status
 
-- 🔍 Keyword Rank Tracking
-- 📊 SEO Analytics Dashboard
-- 🤖 AI-Powered SEO Insights
-- 📈 Performance Visualization
-- 🌐 Responsive Modern UI
-- 🔐 Authentication System *(Upcoming)*
-- 📂 Project & Campaign Management *(Upcoming)*
-- 📉 Competitor Analysis *(Upcoming)*
-- 📤 Export Reports *(Upcoming)*
+**Currently implemented**
 
----
+* Express.js server setup and REST API structure
+* MongoDB Atlas connection using Mongoose
+* User schema and account persistence
+* Secure registration and login flow
+* Password hashing using bcrypt
+* JWT-based authentication
+* Protected current-user profile endpoint
+* Client-to-server authentication integration using Axios
+* Environment-based configuration
 
-## 🛠️ Tech Stack
+**Planned modules**
 
-### Frontend
-- React.js
-- Vite
-- Tailwind CSS
-- JavaScript
-
-### Backend *(Upcoming)*
-- Node.js
-- Express.js
-
-### Database *(Upcoming)*
-- MongoDB
-
-### Other Tools
-- Git & GitHub
-- REST APIs
+* Website SEO audit workflow
+* Browser automation and website data collection
+* AI-generated SEO recommendations
+* SEO report persistence and history
+* Keyword rank monitoring
+* Usage limits based on user plans
+* Production deployment and monitoring
 
 ---
 
-## 📷 Preview
+## Problem Statement
 
-Frontend UI completed successfully.  
-Backend and database integration are currently in progress.
+SEO analysis tools often require users to switch between multiple platforms for authentication, website auditing, keyword tracking and report management.
+
+RankPilot aims to provide a unified workflow where a user can:
+
+1. Create an account securely.
+2. Submit a website for SEO analysis.
+3. Receive structured recommendations.
+4. Monitor keyword performance over time.
+5. Access saved reports from a personalized dashboard.
 
 ---
 
-## 📁 Project Structure
+## Backend Engineering Focus
 
-```bash
-AI_SEO_RANK_TRACKER/
+The backend is designed around secure and maintainable API development.
+
+### Current backend responsibilities
+
+* User registration and authentication
+* Password hashing before database storage
+* JWT generation and verification
+* Protected route authorization
+* MongoDB document modelling
+* Consistent API response structures
+* Integration support for the client application
+
+### Upcoming backend responsibilities
+
+* SEO analysis job handling
+* Browser automation integration
+* AI recommendation generation
+* Report and rank-history storage
+* Plan-based usage control
+* Deployment configuration and environment security
+
+---
+
+## Authentication Flow
+
+```text
+User registers or logs in
+        ↓
+Express controller validates input
+        ↓
+MongoDB stores or retrieves user data
+        ↓
+bcrypt hashes or verifies password
+        ↓
+JWT token is generated
+        ↓
+Client stores token and sends it in future requests
+        ↓
+Protected middleware verifies JWT
+        ↓
+Authorized user accesses protected resources
+```
+
+---
+
+## Current API Endpoints
+
+### Authentication
+
+| Method | Endpoint             | Description                         | Access    |
+| ------ | -------------------- | ----------------------------------- | --------- |
+| `POST` | `/api/auth/register` | Create a new user account           | Public    |
+| `POST` | `/api/auth/login`    | Authenticate user and return token  | Public    |
+| `GET`  | `/api/auth/me`       | Return currently authenticated user | Protected |
+
+### Register User
+
+**Request**
+
+```json
+{
+  "name": "Anupam",
+  "email": "user@example.com",
+  "password": "securePassword"
+}
+```
+
+**Response**
+
+```json
+{
+  "success": true,
+  "token": "jwt-token",
+  "user": {
+    "id": "mongodb-user-id",
+    "name": "Anupam",
+    "email": "user@example.com",
+    "plan": "free"
+  }
+}
+```
+
+### Login User
+
+**Request**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "securePassword"
+}
+```
+
+**Response**
+
+```json
+{
+  "success": true,
+  "token": "jwt-token",
+  "user": {
+    "id": "mongodb-user-id",
+    "name": "Anupam",
+    "email": "user@example.com",
+    "plan": "free"
+  }
+}
+```
+
+### Get Current User
+
+**Request Header**
+
+```http
+Authorization: Bearer <jwt-token>
+```
+
+**Response**
+
+```json
+{
+  "id": "mongodb-user-id",
+  "name": "Anupam",
+  "email": "user@example.com",
+  "plan": "free",
+  "analysisCount": 0
+}
+```
+
+---
+
+## Technology Stack
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB Atlas
+* Mongoose
+* JSON Web Token
+* bcrypt
+* CORS
+* dotenv
+
+### Client Integration
+
+* React
+* TypeScript
+* Vite
+* Axios
+* Tailwind CSS
+
+### Planned Integrations
+
+* Gemini API for AI-generated SEO insights
+* Browser automation service for website data extraction
+* Deployment platform for production hosting
+
+---
+
+## Project Structure
+
+```text
+rankpilot-ai-seo-platform/
 │
-├── client/          # Frontend Application
-├── server/          # Backend Application (Upcoming)
+├── client/                         # Web client consuming backend APIs
+│   └── src/
+│       ├── context/                # Authentication and API context
+│       └── pages/                  # User-facing pages
+│
+├── server/                         # Backend application
+│   ├── config/
+│   │   └── db.js                   # MongoDB connection
+│   │
+│   ├── controllers/
+│   │   └── authcontroller.js       # Register, login and profile logic
+│   │
+│   ├── middlewares/
+│   │   └── auth.js                 # JWT route protection
+│   │
+│   ├── models/
+│   │   └── User.js                 # User database schema
+│   │
+│   ├── routes/
+│   │   └── authRoutes.js           # Authentication endpoints
+│   │
+│   ├── package.json
+│   └── server.js                   # Express entry point
+│
 └── README.md
 ```
 
 ---
 
-## ⚙️ Getting Started
+## Local Setup
 
-### Frontend Setup
+### Prerequisites
+
+Make sure you have installed:
+
+* Node.js
+* npm
+* A MongoDB Atlas account
+
+### Clone Repository
+
+```bash
+git clone https://github.com/anupam-devcodes/rankpilot-ai-seo-platform.git
+cd rankpilot-ai-seo-platform
+```
+
+---
+
+## Backend Setup
+
+Move into the server directory:
+
+```bash
+cd server
+npm install
+```
+
+Create a `.env` file inside the `server` folder:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secure_jwt_secret
+```
+
+Start the backend development server:
+
+```bash
+npm run server
+```
+
+Backend server will run on:
+
+```text
+http://localhost:5000
+```
+
+---
+
+## Client Setup
+
+Open another terminal and move into the client directory:
 
 ```bash
 cd client
 npm install
+```
+
+Create a `.env` file inside the `client` folder:
+
+```env
+VITE_BACKEND_URL=http://localhost:5000/api
+```
+
+Start the client application:
+
+```bash
 npm run dev
 ```
 
-The application will run locally on:
+---
 
-```bash
-http://localhost:5173
-```
+## Environment Variables
 
-## 🚧 Current Status
+### Server
 
-✅ Frontend Completed  
-🔄 Backend Development In Progress  
-🔄 Database Integration Pending
+| Variable      | Purpose                                       |
+| ------------- | --------------------------------------------- |
+| `PORT`        | Port on which Express server runs             |
+| `MONGODB_URI` | MongoDB Atlas database connection string      |
+| `JWT_SECRET`  | Secret key used to sign and verify JWT tokens |
+
+### Client
+
+| Variable           | Purpose                                      |
+| ------------------ | -------------------------------------------- |
+| `VITE_BACKEND_URL` | Base URL used by the client for API requests |
+
+> Never commit `.env` files or secret keys to GitHub.
 
 ---
 
-## 🎯 Future Enhancements
+## Security Practices Implemented
 
-- AI SEO Recommendation Engine
-- Real-time Rank Monitoring
-- Google Search Console Integration
-- Advanced Analytics
-- Team Collaboration Features
-- Dark Mode Support
-
----
-
-## 🤝 Contributing
-
-Contributions, suggestions, and improvements are welcome.
-
-Feel free to fork the repository and submit a pull request.
+* Passwords are hashed before being stored in MongoDB.
+* JWT tokens are generated only after successful authentication.
+* Protected routes require a valid bearer token.
+* Password values are excluded from user-profile responses.
+* Sensitive configuration is managed through environment variables.
 
 ---
 
-## 📜 License
+## Planned Backend Roadmap
 
-This project is developed for learning and portfolio purposes.
+* [x] Express server setup
+* [x] MongoDB Atlas connection
+* [x] User model
+* [x] Registration and login APIs
+* [x] JWT authentication middleware
+* [x] Protected current-user endpoint
+* [ ] Website analysis model and APIs
+* [ ] SEO report storage
+* [ ] Browser automation integration
+* [ ] Gemini-powered recommendations
+* [ ] Keyword tracking history
+* [ ] Free/pro usage enforcement
+* [ ] Production deployment
 
 ---
 
-## 👨‍💻 Author
+## Key Learning Outcomes
 
-**Anupam Choubey**
+This project demonstrates practical backend engineering concepts including:
 
-- GitHub: https://github.com/anupam-devcodes
-- LinkedIn: www.linkedin.com/in/anupam-choubey-8a7514296
+* REST API development using Express
+* Database modelling using MongoDB and Mongoose
+* Authentication using bcrypt and JWT
+* Route protection through middleware
+* API contract integration with a web client
+* Secure environment configuration
+* Building toward AI-enabled backend workflows
 
 ---
+
+## License
+
+This repository includes component-level licence information. Please refer to the licence files included within the relevant project directories.
+
+---
+
+## Maintainer
+
+**GitHub:** `@anupam-devcodes`
